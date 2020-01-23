@@ -1,9 +1,36 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab Three
+      Income Sources
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <form [formGroup]="incomeFormGroup">
+    <ion-list>
+      <ion-item>
+        <ion-label>Income source</ion-label>
+        <ion-select formControlName="incomeSource" interface="action-sheet">
+          <ion-select-option *ngFor="let incomeSourceOption of incomeSourceOptions" [value]="incomeSourceOption">{{incomeSourceOption}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>How much money?</ion-label>
+        <ion-input type="number" value="0" formControlName="howMuchMoney"></ion-input>
+      </ion-item>
+
+      </ion-item="expenseFormGroup.value.itemOrService">
+        <ion-label>Currency type</ion-label>
+        <ion-select formControlName="currencyType" interface="action-sheet">
+          <ion-select-option *ngFor="let currencyTypeOption of currencyTypeOptions" [value]="currencyTypeOption">{{currencyTypeOption}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-button type="submit" (click)="addExpense()">Add expense</ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

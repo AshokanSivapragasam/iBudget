@@ -1,9 +1,43 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab Two
+      Expenses
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <form [formGroup]="expenseFormGroup">
+    <ion-list>
+      <ion-item>
+        <ion-label>Area of payment</ion-label>
+        <ion-select formControlName="areaOfPayment" (ionChange)="getItemsOrServices($event)" [interfaceOptions]="customActionSheetOptions" interface="action-sheet">
+          <ion-select-option *ngFor="let areaOfPaymentOption of areaOfPaymentOptions" [value]="areaOfPaymentOption">{{areaOfPaymentOption}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="expenseFormGroup.value.areaOfPayment">
+        <ion-label>Item or service</ion-label>
+        <ion-select formControlName="itemOrService" interface="action-sheet">
+          <ion-select-option *ngFor="let itemOrServiceOption of itemOrServiceOptions" [value]="itemOrServiceOption">{{itemOrServiceOption}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="expenseFormGroup.value.itemOrService">
+        <ion-label>Mode of payment</ion-label>
+        <ion-select formControlName="modeOfPayment" interface="action-sheet">
+          <ion-select-option *ngFor="let modeOfPaymentOption of modeOfPaymentOptions" [value]="modeOfPaymentOption">{{modeOfPaymentOption}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="expenseFormGroup.value.modeOfPayment">
+        <ion-label>How much money?</ion-label>
+        <ion-input type="number" value="0" formControlName="howMuchMoney"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-button type="submit" (click)="addExpense()">Add expense</ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>
