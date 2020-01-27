@@ -49,7 +49,7 @@ export class Tab2Page {
 
     console.log(this.file.dataDirectory);
 
-    this.file.writeFile('.', '_file_.json', '{"a": "b"}');
+    this.file.writeFile('.', '_file_.jon', '{"a": "b"}');
   }
 
   getItemsOrServices(are: any) {
