@@ -3,4 +3,5 @@ export interface ExpenseModel {
     modeOfPayment: string;
     itemOrService: string;
     howMuchMoney: number;
+    currencyType: string;
 }

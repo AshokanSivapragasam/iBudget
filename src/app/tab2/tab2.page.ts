@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Filesystem } from '@ionic-enterprise/filesystem/ngx';
-import { Directories } from '@ionic-enterprise/filesystem';
+import { File } from '@ionic-native/file/ngx';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonService } from '../common.service';
 import { ExpenseModel } from '../models/expense.model';
@@ -22,6 +22,7 @@ export class Tab2Page {
   medicalExpenseOptions: string[] = ['Cmc', 'Sanitary'];
   personalExpenseOptions: string[] = ['Giving', 'Debt'];
   modeOfPaymentOptions: string[] = ['Cash', 'Gpay', 'NetBanking', 'Paytm'];
+  currencyTypeOptions: string[] = ['INR', 'USD'];
 
   expenseModel: ExpenseModel;
 
@@ -35,13 +36,20 @@ export class Tab2Page {
   expenseFormGroup: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
-              private commonService: CommonService) {
+              private commonService: CommonService,
+              private file: File,
+              private fileChooser: FileChooser) {
     this.expenseFormGroup = formBuilder.group({
       areaOfPayment: ['', Validators.required],
       itemOrService: ['', Validators.required],
       modeOfPayment: ['', Validators.required],
-      howMuchMoney: [1, Validators.required]
+      howMuchMoney: [1, Validators.required],
+      currencyType: ['', Validators.required]
     });
+
+    console.log(this.file.dataDirectory);
+
+    this.file.writeFile('.', '_file_.json', '{"a": "b"}');
   }
 
   getItemsOrServices(are: any) {
@@ -78,7 +86,8 @@ export class Tab2Page {
       areaOfPayment: this.expenseFormGroup.value.areaOfPayment,
       itemOrService: this.expenseFormGroup.value.itemOrService,
       modeOfPayment: this.expenseFormGroup.value.modeOfPayment,
-      howMuchMoney: this.expenseFormGroup.value.howMuchMoney
+      howMuchMoney: this.expenseFormGroup.value.howMuchMoney,
+      currencyType: this.expenseFormGroup.value.currencyType
     }
     this.commonService.expenseModels.push(this.expenseModel);
     console.log(this.commonService.expenseModels.length);

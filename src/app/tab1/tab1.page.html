@@ -22,10 +22,15 @@
     </ion-list>-->
     <ion-list>
       <ion-list-header>
-        <ion-label>Expenses</ion-label>
+        <ion-label>Money overview</ion-label>
       </ion-list-header>
+      <ion-item *ngFor="let incomeModel of incomeModels">
+        <ion-label>{{incomeModel.incomeSource}}</ion-label>
+        <span>{{incomeModel.howMuchMoney | number : '1.2-2'}}</span>
+      </ion-item>
       <ion-item *ngFor="let expenseModel of expenseModels">
         <ion-label>{{expenseModel.areaOfPayment + ' | ' + expenseModel.modeOfPayment + ' | ' + expenseModel.itemOrService}}</ion-label>
+        <span>{{expenseModel.howMuchMoney | number : '1.2-2'}}</span>
       </ion-item>
     </ion-list>
 </ion-content>

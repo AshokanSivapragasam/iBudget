@@ -21,7 +21,7 @@
         <ion-input type="number" value="0" formControlName="howMuchMoney"></ion-input>
       </ion-item>
 
-      </ion-item="expenseFormGroup.value.itemOrService">
+      <ion-item>
         <ion-label>Currency type</ion-label>
         <ion-select formControlName="currencyType" interface="action-sheet">
           <ion-select-option *ngFor="let currencyTypeOption of currencyTypeOptions" [value]="currencyTypeOption">{{currencyTypeOption}}</ion-select-option>
@@ -29,7 +29,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-button type="submit" (click)="addExpense()">Add expense</ion-button>
+        <ion-button type="submit" (click)="addIncome()">Add income</ion-button>
       </ion-item>
     </ion-list>
   </form>
