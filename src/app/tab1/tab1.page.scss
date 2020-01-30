@@ -2,3 +2,21 @@
   max-height: 35vh;
   overflow: hidden;
 }
+
+.income-label, .income-figure {
+  color: lightgreen;
+  font-size: 14px;
+}
+
+.expense-label, .expense-figure {
+  color: lightcoral;
+  font-size: 14px;
+}
+
+.close-button {
+  color: red;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
