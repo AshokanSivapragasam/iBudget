@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonService } from '../common.service';
-import { ExpenseModel } from '../models/expense.model';
-import { IncomeModel } from '../models/income.model';
 
 @Component({
   selector: 'app-tab1',

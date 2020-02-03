@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { File } from '@ionic-native/file/ngx';
-import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonService } from '../common.service';
 import { ExpenseModel } from '../models/expense.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
+import { SdCardFileService } from '../services/sd-card-file/sd-card-file.service';
+import { SqliteStorageService } from '../services/sqlite-storage/sqlite-storage.service';
 
 @Component({
   selector: 'app-tab2',
@@ -35,15 +36,15 @@ export class Tab2Page {
     subHeader: 'Select area of payment'
   };
 
-  expenseModels: ExpenseModel[];
-
   expenseFormGroup: FormGroup;
+  messageText: string;
 
   constructor(private formBuilder: FormBuilder,
               private commonService: CommonService,
               private datePicker: DatePicker,
               private file: File,
-              private fileChooser: FileChooser,
+              private sdCardFileService: SdCardFileService,
+              private sqliteStorageService: SqliteStorageService,
               private datePipe: DatePipe) {
     this.expenseFormGroup = formBuilder.group({
       areaOfPayment: [this.areaOfPaymentOptions[0], Validators.required],
@@ -54,10 +55,6 @@ export class Tab2Page {
       transactionDatetime: ['', Validators.required],
       transactionNotes: ['']
     });
-
-    console.log(this.file.dataDirectory);
-
-    this.file.writeFile('.', '_file_.jon', '{"a": "b"}');
   }
 
   ngOnInit() {
@@ -117,6 +114,20 @@ export class Tab2Page {
     }
     this.commonService.expenseModels.push(this.expenseModel);
     console.log(this.commonService.expenseModels.length);
-    console.log(JSON.stringify(this.expenseModel));
+
+    this.sqliteStorageService.getAllExpensesFromDbAsync()
+    .then(insertMessageText => console.log(insertMessageText));
+
+    /*this.sqliteStorageService.addExpenseToDbAsync(this.expenseModel)
+    .then(insertMessageText => console.log(insertMessageText));*/
+
+    /*let _messageText_: string = 'Path: ' + this.file.externalDataDirectory + '/_expense_.json';
+    this.sdCardFileService.writeFile(this.file.externalDataDirectory, '_expense_.json', JSON.stringify(this.commonService.expenseModels)).then(_ => {
+      console.log('File write success! ' + _messageText_);
+      this.messageText = 'File write success! ' + _messageText_;
+    }).catch((reason) => {
+      console.log('File write failed! ' + _messageText_);
+      this.messageText = 'File write failed! ' + _messageText_;
+    });*/
   }
 }
