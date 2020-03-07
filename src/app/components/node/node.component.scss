@@ -1,0 +1,19 @@
+.node-element {
+    .expense-item {
+        .expense-title, .collapse-icon, .leaf-icon {
+            color: #9bc2e6;
+        }
+
+        .expense-figure {
+            color: #1f4e78;
+        }
+    }
+}
+
+.close-button {
+    color: red;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }

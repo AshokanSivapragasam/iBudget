@@ -15,7 +15,10 @@ import { SdCardFileService } from '../services/sd-card-file/sd-card-file.service
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{ path: '', component: Tab2Page }])
+    RouterModule.forChild([
+      { path: '', component: Tab2Page },
+      { path: 'frequent-expense-transaction/:frequentExpenseTransactionId', component: Tab2Page },
+      { path: ':expenseModelId', component: Tab2Page }])
   ],
   declarations: [Tab2Page],
   providers: [File, FileChooser, DatePicker, DatePipe, SdCardFileService]

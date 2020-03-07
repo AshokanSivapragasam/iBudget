@@ -1,5 +1,6 @@
 export interface ExpenseModel {
     id: number;
+    isPrivate: boolean;
     areaOfPayment: string;
     modeOfPayment: string;
     itemOrService: string;

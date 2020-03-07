@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Expenses
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let expenseModel of recurrentExpenseModels">
+      <ion-label (click)="goToExpensePage(expenseModel.id)" class="expense-label">{{expenseModel.areaOfPayment + ' | ' + expenseModel.modeOfPayment + ' | ' + expenseModel.itemOrService}}</ion-label>
+      <span (click)="goToExpensePage(expenseModel.id)" class="expense-figure">{{expenseModel.howMuchMoney | number : '1.2-2'}}</span>
+    </ion-item>
+  </ion-list>
+</ion-content>

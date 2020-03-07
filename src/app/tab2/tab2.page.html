@@ -10,8 +10,13 @@
   <form [formGroup]="expenseFormGroup">
     <ion-list>
       <ion-item>
+        <ion-label>Is private?</ion-label>
+        <ion-toggle formControlName="isPrivate" color="secondary"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
         <ion-label>Area of payment</ion-label>
-        <ion-select formControlName="areaOfPayment" (ionChange)="getItemsOrServices($event)" [interfaceOptions]="customActionSheetOptions" interface="action-sheet">
+        <ion-select formControlName="areaOfPayment" (ionChange)="getItemsOrServices(undefined)" [interfaceOptions]="customActionSheetOptions" interface="action-sheet">
           <ion-select-option *ngFor="let areaOfPaymentOption of areaOfPaymentOptions" [value]="areaOfPaymentOption">{{areaOfPaymentOption}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -54,10 +59,18 @@
       </ion-item>
 
       <ion-item>
-        <ion-button type="submit" (click)="addExpense()">Add expense</ion-button>
+        <ion-button type="submit" (click)="!expenseModelId ? addExpense(): editExpense(expenseModelId)">{{!expenseModelId? 'Add': 'Edit'}} expense</ion-button>
       </ion-item>
     </ion-list>
   </form>
 
-  <p>{{messageText}}</p>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Recurrent transactions</ion-label>
+    </ion-list-header>    
+    <ion-item *ngFor="let expenseModel of recurrentExpenseModels">
+      <ion-label (click)="fillFrequentExpenseModel(expenseModel.id)" class="expense-label">{{expenseModel.areaOfPayment + ' | ' + expenseModel.modeOfPayment + ' | ' + expenseModel.itemOrService}}</ion-label>
+      <span (click)="fillFrequentExpenseModel(expenseModel.id)" class="expense-figure">{{expenseModel.howMuchMoney | number : '1.2-2'}}</span>
+    </ion-item>
+  </ion-list>
 </ion-content>
