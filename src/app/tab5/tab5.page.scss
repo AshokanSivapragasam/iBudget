@@ -1,1 +1,63 @@
+.circle-inner-belt, .circle-outer-belt {
+    position: absolute;
+    padding: 10px;
+    border-radius: 50%;
+    transform: translate(-270px, -270px);
+}
 
+.circle-inner-belt {
+    height: 360px;
+    width: 360px;
+    background-color: ivory;
+}
+
+.circle-outer-belt {
+    height: 410px;
+    width: 410px;
+    background-color: lighten($color: lightgreen, $amount: 12);
+}
+
+.points {
+    position: relative;
+}
+
+.points>section {
+    position: absolute;
+}
+
+.radical-menu {
+    position: relative;
+    height: 120px;
+    width: 120px;
+    padding: 10px;
+}
+
+.radical-menu>section {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    font-size: x-large;
+    border-radius: 50%;
+    transition: all .4s ease-in-out;
+    transform: translate(0px, 0px);
+}
+
+.radical-menu>section:hover {
+    background-color: lighten($color: limegreen, $amount: 12);
+}
+
+.radical-menu>section:first-child {
+    transform: translate(0px, 50px);
+    color: green;
+}
+
+.radical-menu>section:nth-child(2) {
+    transform: translate(33px, 33px);
+    color: limegreen;
+}
+
+.radical-menu>section:last-child {
+    transform: translate(50px, 0px);
+    color: greenyellow;
+}

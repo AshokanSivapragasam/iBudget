@@ -1,11 +1,22 @@
 .node-element {
     .expense-item {
-        .expense-title, .collapse-icon, .leaf-icon {
-            color: #9bc2e6;
+        --background: #263039;
+        .collapse-icon, .leaf-icon {
+            //color: #9bc2e6;
+            color: lightcoral;
+            padding: 8px;
+        }
+
+        .expense-title {
+            color: lightcoral;
+            padding: 8px;
+            margin: 0;
         }
 
         .expense-figure {
-            color: #1f4e78;
+            //color: #1f4e78;
+            color: red;
+            padding: 8px;
         }
     }
 }
@@ -16,4 +27,4 @@
     padding-right: 5px;
     padding-top: 0;
     padding-bottom: 0;
-  }
+}

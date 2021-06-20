@@ -5,6 +5,8 @@ import { SqliteDbCopy } from '@ionic-native/sqlite-db-copy/ngx';
 import { ExpenseModel } from 'src/app/models/expense.model';
 import { IncomeModel } from 'src/app/models/income.model';
 import { ExpenseTypeModel } from 'src/app/models/expense-type.model';
+import { DatePipe } from '@angular/common';
+import { MessageService } from '../message/message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,24 +15,25 @@ export class SqliteStorageService {
 
   constructor(private sqlite: SQLite,
               private sqlitePorter: SQLitePorter,
-              private sqliteDbCopy: SqliteDbCopy) {
-    
+              private datepipe: DatePipe,
+              private sqliteDbCopy: SqliteDbCopy,
+              private messageService: MessageService) {
   }
 
   async exportDbToJsonAsync(): Promise<string> {
     var createTableMessageText: string = '';
     
-    await this.sqliteDbCopy.copy('ionic.db', 2)
-    .then(_reponse_ => console.log(_reponse_))
-    .catch(_error_ => console.log(_error_));
+    await this.sqliteDbCopy.copy('ionicdb.db', 0)
+    .then(_reponse_ => console.log("SqliteDbCopy | Success | " + _reponse_))
+    .catch(_error_ => console.log("SqliteDbCopy | Fail | " + _error_));
 
     await this.sqlite.create({
       name: 'ionicdb.db',
       location: 'default'
     }).then(async (db: SQLiteObject) => {
       this.sqlitePorter.exportDbToJson(db)
-      .then(_response_ => console.log(_response_))
-      .catch(reason => console.log(reason));
+      .then(_response_ => { console.log("sqlitePorter.exportDbToJson | Success | " + _response_); createTableMessageText = _response_; })
+      .catch(reason => console.log("sqlitePorter.exportDbToJson | Catch01 | " + reason));
     }).catch(e => { console.log('SvcException 3: ' + JSON.stringify(e)); createTableMessageText = 'SvcException 3: ' + JSON.stringify(e); });
 
     return createTableMessageText;
@@ -140,8 +143,8 @@ export class SqliteStorageService {
       location: 'default'
     }).then(async (db: SQLiteObject) => {
       var createTableSqlText = 'CREATE TABLE IF NOT EXISTS Expense(id INTEGER PRIMARY KEY AUTOINCREMENT, areaOfPayment TEXT, modeOfPayment TEXT, itemOrService TEXT, howMuchMoney INTEGER, currencyType TEXT, transactionDatetime TEXT, transactionNotes TEXT)';
-      //createTableSqlText = 'ALTER TABLE Expense ADD COLUMN IsPrivate INTEGER DEFAULT 0';
-      //createTableSqlText = 'ALTER TABLE Expense DROP COLUMN IsPrivate';
+      //createTableSqlText = 'ALTER TABLE Expense DROP COLUMN IsPrivate;';
+      //createTableSqlText = 'ALTER TABLE Expense ADD COLUMN labels TEXT DEFAULT \'\'';
       await db.executeSql(createTableSqlText, [])
         .then(createTableResponse => {
           console.log('Table, "Expense" created successfully!');
@@ -163,14 +166,13 @@ export class SqliteStorageService {
 
       await db.executeSql(selectStmt, [])
         .then(selectStmtResponse => {
+          this.messageService.add('Expense length | ' + selectStmtResponse.rows.length);
           for (var idx = 0; idx < selectStmtResponse.rows.length; idx += 1) {
             var currentRow = selectStmtResponse.rows.item(idx);
-            if (currentRow.IsPrivate == '1') {
-              console.log(currentRow.IsPrivate + 'True');
-            }
             expenseModels.push({
               id: currentRow.id,
-              isPrivate: (currentRow.IsPrivate == '1') ? true: false,
+              labels: currentRow.labels,
+              transactionMonth: this.datepipe.transform(new Date(currentRow.transactionDatetime), 'MMM'),
               areaOfPayment: currentRow.areaOfPayment,
               itemOrService: currentRow.itemOrService,
               modeOfPayment: currentRow.modeOfPayment,
@@ -186,26 +188,68 @@ export class SqliteStorageService {
     return expenseModels;
   }
 
-  async getDataForPieChartFromDbAsync(): Promise<any[]> {
+  async getUniqueTransactionMonthsFromDbAsync(): Promise<string[]> {
     var messageText: string = '';
-    var freePieChartData: any[] = [];
+    let distinctDates: string[] = [];
+    let monthList = [{idx: '01', text: 'Jan'}, {idx: '02', text: 'Feb'}, {idx: '03', text: 'Mar'}, {idx: '04', text: 'Apr'},
+    {idx: '05', text: 'May'}, {idx: '06', text: 'Jun'}, {idx: '07', text: 'Jul'}, {idx: '08', text: 'Aug'},
+    {idx: '09', text: 'Sep'}, {idx: '10', text: 'Oct'}, {idx: '11', text: 'Nov'}, {idx: '12', text: 'Dec'}];
 
     await this.sqlite.create({
       name: 'ionicdb.db',
       location: 'default'
     }).then(async (db: SQLiteObject) => {
-      let selectStmt = 'SELECT areaOfPayment, SUM(howMuchMoney)/ 22625.0 as sumOfMoney FROM Expense ' +
-        'GROUP BY areaOfPayment';
+      let distinctDatesStmt = 'SELECT DISTINCT strftime(\'%m\', transactionDatetime) as transactionMonth, strftime(\'%Y\', transactionDatetime) as transactionYear FROM Expense';
+      await db.executeSql(distinctDatesStmt, [])
+      .then(queryResponse => {
+        for (var idx = 0; idx < queryResponse.rows.length; idx += 1) {
+          var currentRow = queryResponse.rows.item(idx);
+          var _monthText_ = monthList.find(r => r.idx === currentRow.transactionMonth).text + '-' + currentRow.transactionYear;
+          distinctDates.push(_monthText_);
+        }
+      });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    return distinctDates;
+  }
 
+  async getDataForPieChartForAMonthFromDbAsync(monthLabel: string): Promise<any[]> {
+    var messageText: string = '';
+    var freePieChartData: any[] = [];
+    let monthList = [{idx: '01', text: 'Jan'}, {idx: '02', text: 'Feb'}, {idx: '03', text: 'Mar'}, {idx: '04', text: 'Apr'},
+    {idx: '05', text: 'May'}, {idx: '06', text: 'Jun'}, {idx: '07', text: 'Jul'}, {idx: '08', text: 'Aug'},
+    {idx: '09', text: 'Sep'}, {idx: '10', text: 'Oct'}, {idx: '11', text: 'Nov'}, {idx: '12', text: 'Dec'}];
+
+    var _monthLabel_ =  monthLabel.split('-');
+    var _monthNumber_ = monthList.find(r => r.text === _monthLabel_[0]).idx;
+    await this.sqlite.create({
+      name: 'ionicdb.db',
+      location: 'default'
+    }).then(async (db: SQLiteObject) => {
+      let totalSumOfMoneyStmt = 'SELECT SUM(howMuchMoney) as totalSumOfMoney FROM Expense ' +
+      'WHERE strftime(\'%m\', transactionDatetime) = \'' + _monthNumber_ + '\' AND ' +
+      'strftime(\'%Y\', transactionDatetime) = \'' + _monthLabel_[1] + '\'';
+      let totalSumOfMoney:number = 1;
+      await db.executeSql(totalSumOfMoneyStmt, [])
+      .then(queryResponse => {
+        totalSumOfMoney = queryResponse.rows.item(0).totalSumOfMoney;
+      });
+
+      let selectStmt = 'SELECT areaOfPayment, SUM(howMuchMoney)/' + totalSumOfMoney.toFixed(2) + ' as sumOfMoney FROM Expense ' +
+      'WHERE strftime(\'%m\', transactionDatetime) = \'' + _monthNumber_ + '\' AND ' +
+      'strftime(\'%Y\', transactionDatetime) = \'' + _monthLabel_[1] + '\' ' +
+      'GROUP BY areaOfPayment';
       await db.executeSql(selectStmt, [])
         .then(selectStmtResponse => {
           for (var idx = 0; idx < selectStmtResponse.rows.length; idx += 1) {
             var currentRow = selectStmtResponse.rows.item(idx);
-            freePieChartData.push([currentRow.areaOfPayment, currentRow.sumOfMoney]);
+            freePieChartData.push({
+              transactionDate: currentRow.transactionDate,
+              areaOfPayment: currentRow.areaOfPayment,
+              sumOfMoney: currentRow.sumOfMoney
+            });
           }
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
     }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
-
     return freePieChartData;
   }
 
@@ -253,7 +297,7 @@ export class SqliteStorageService {
                 var currentRow = selectStmtResponse.rows.item(idx);
                 expenseModels.push({
                   id: currentRow.id,
-                  isPrivate: (currentRow.IsPrivate == '1') ? true: false,
+                  labels: currentRow.labels,
                   areaOfPayment: currentRow.areaOfPayment,
                   itemOrService: currentRow.itemOrService,
                   modeOfPayment: currentRow.modeOfPayment,
@@ -285,7 +329,7 @@ export class SqliteStorageService {
           var currentRow = selectStmtResponse.rows.item(0);
           expenseModel = {
             id: currentRow.id,
-            isPrivate: (currentRow.IsPrivate == '1') ? true: false,
+            labels: currentRow.labels,
             areaOfPayment: currentRow.areaOfPayment,
             itemOrService: currentRow.itemOrService,
             modeOfPayment: currentRow.modeOfPayment,
@@ -315,7 +359,7 @@ export class SqliteStorageService {
           var currentRow = selectStmtResponse.rows.item(0);
           expenseModel = {
             id: currentRow.id,
-            isPrivate: (currentRow.IsPrivate == '1') ? true: false,
+            labels: currentRow.labels,
             areaOfPayment: currentRow.areaOfPayment,
             itemOrService: currentRow.itemOrService,
             modeOfPayment: currentRow.modeOfPayment,
@@ -337,8 +381,8 @@ export class SqliteStorageService {
       name: 'ionicdb.db',
       location: 'default'
     }).then(async (db: SQLiteObject) => {
-      let insertStmt = 'INSERT INTO Expense (IsPrivate, areaOfPayment, modeOfPayment, itemOrService, howMuchMoney, currencyType, transactionDatetime, transactionNotes) VALUES (\'' 
-        + (expenseModel.isPrivate ? '1': '0') + '\', \''
+      let insertStmt = 'INSERT INTO Expense (labels, areaOfPayment, modeOfPayment, itemOrService, howMuchMoney, currencyType, transactionDatetime, transactionNotes) VALUES (\'' 
+        + expenseModel.labels + '\', \''
         + expenseModel.areaOfPayment + '\', \''
         + expenseModel.modeOfPayment + '\', \''
         + expenseModel.itemOrService + '\', \''
@@ -364,7 +408,7 @@ export class SqliteStorageService {
       name: 'ionicdb.db',
       location: 'default'
     }).then(async (db: SQLiteObject) => {
-      let updateStmt = 'UPDATE Expense SET IsPrivate = '+ (expenseModel.isPrivate ? 1: 0) + ','
+      let updateStmt = 'UPDATE Expense SET labels = \''+ expenseModel.labels + '\','
         + 'areaOfPayment = \'' + expenseModel.areaOfPayment + '\','
         + 'modeOfPayment = \'' + expenseModel.modeOfPayment + '\','
         + 'itemOrService = \'' + expenseModel.itemOrService + '\','
@@ -433,6 +477,7 @@ export class SqliteStorageService {
             var currentRow = selectStmtResponse.rows.item(idx);
             incomeModels.push({
               id: currentRow.id,
+              transactionMonth: this.datepipe.transform(new Date(currentRow.transactionDatetime), 'MMM'),
               incomeSource: currentRow.incomeSource,
               howMuchMoney: currentRow.howMuchMoney,
               currencyType: currentRow.currencyType,
@@ -461,6 +506,7 @@ export class SqliteStorageService {
           var currentRow = selectStmtResponse.rows.item(0);
           incomeModel = {
             id: currentRow.id,
+            transactionMonth: this.datepipe.transform(new Date(currentRow.transactionDatetime), 'MMM'),
             incomeSource: currentRow.incomeSource,
             howMuchMoney: currentRow.howMuchMoney,
             currencyType: currentRow.currencyType,

@@ -1,7 +1,10 @@
 <section *ngFor="let node of nodes" class="node-element">
-  <ion-item class="expense-item" [style.padding-left]="(node.level * 10) + 'px'">
-    <ion-icon class="collapse-icon" [name]="node.collapse ? 'add' : 'remove'" (click)="toggleCollapse(node)" *ngIf="node.childrenNodes && node.childrenNodes.length > 0"></ion-icon>
-    <ion-icon class="leaf-icon" [name]="'basket'" *ngIf="!node.childrenNodes || node.childrenNodes.length == 0"></ion-icon>
+  <ion-item class="expense-item">
+    <span [style.padding-left]="((node.level - 1) * 10) + 'px'"
+          [style.padding-right]="'2px'">
+      <ion-icon class="collapse-icon" [name]="node.collapse ? 'add' : 'remove'" (click)="toggleCollapse(node)" *ngIf="node.childrenNodes && node.childrenNodes.length > 0"></ion-icon>
+      <ion-icon class="leaf-icon" [name]="'basket'" *ngIf="!node.childrenNodes || node.childrenNodes.length == 0"></ion-icon>
+    </span>
     <ion-label class="expense-title" (click)="(!node.childrenNodes || node.childrenNodes.length == 0) ? updateExpenseAtDb(node.expenseModelId): toggleCollapse(node)">{{node.title}}</ion-label>
     <span class="expense-figure" (click)="(!node.childrenNodes || node.childrenNodes.length == 0) ? updateExpenseAtDb(node.expenseModelId): toggleCollapse(node)">{{(node.sumOfMoney | number : '1.2-2') + ' ' + node.currencyType}}</span>
     <span class="close-button" *ngIf="!node.childrenNodes || node.childrenNodes.length == 0" (click)="deleteExpenseTransaction(node.expenseModelId)">X</span>

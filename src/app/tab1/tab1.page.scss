@@ -1,15 +1,89 @@
-.welcome-card img {
-  max-height: 35vh;
-  overflow: hidden;
+ion-toolbar {
+  --background: #3553bb;
+  color: ivory;
+}
+
+ion-content, ion-content * {
+  --background: #263039;
+}
+
+.title-banner {
+  display: flex;
+  flex-direction: row;
+}
+
+.title-banner>span {
+  display: flex;
+  flex-direction: column;
+  flex: 0.33;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-banner>span:first-child {
+  align-items: flex-start;
+}
+
+.title-banner>span:nth-child(2) {
+  font-size: small;
+}
+
+.title-banner>span:last-child {
+  align-items: flex-end;
+}
+
+.month-selector {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #3553bb;
+  color: ivory;
+  padding: 10px;
+  font-size: small;
+}
+
+.month-selector>* {
+  display: flex;
+  flex: .33;
+  justify-content: center;
+  margin: 2px;
+  padding: 10px;
+}
+
+.expense-items-section, .income-items-section {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.expense-items-section>.title {
+  padding: 10px;
+  background-color: #ff5566;
+  color: ivory;
+}
+
+.income-items-section>.title {
+  padding: 10px;
+  background-color: lawngreen;
+  color: ivory;
+}
+
+.list-md {
+  padding: 0 !important;
 }
 
 .income-label, .income-figure {
-  color: lightgreen;
+  --background: lightgreen;
+  color: lightyellow;
   font-size: 14px;
 }
 
 .expense-label, .expense-figure {
-  color: lightcoral;
+  --background: #f5ccd2;
+  color: #ce183a;
   font-size: 14px;
 }
 

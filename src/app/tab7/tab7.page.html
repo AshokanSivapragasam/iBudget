@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Algorithms
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="msg-container">
+    <section class="msg" *ngFor="let message of messageService.messages">{{message}}</section>
+  </section>
+</ion-content>

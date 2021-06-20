@@ -7,6 +7,7 @@ import { GoogleChartsModule} from 'angular-google-charts';
 
 import { Tab4Page } from './tab4.page';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { CommonService } from '../services/common/common.service';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
     RouterModule.forChild([{ path: '', component: Tab4Page }])
   ],
   declarations: [Tab4Page],
-  providers: [DatePicker, DatePipe]
+  providers: [DatePicker, DatePipe, CommonService]
 })
 export class Tab4PageModule {}

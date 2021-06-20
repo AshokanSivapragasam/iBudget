@@ -1,7 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Expenses
+      <section class="title-banner">
+        <span>
+          <ion-icon name="menu"></ion-icon>
+        </span>
+        <span>
+          <section>Expenses</section>
+        </span>
+        <span>
+          <ion-icon name="calendar"></ion-icon>
+        </span>
+      </section>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +19,21 @@
 <ion-content>
   <form [formGroup]="expenseFormGroup">
     <ion-list>
+      <ion-list-header>
+        <ion-label>{{!expenseModelId ? 'Add an': 'Edit the'}} expense</ion-label>
+      </ion-list-header>
       <ion-item>
-        <ion-label>Is private?</ion-label>
-        <ion-toggle formControlName="isPrivate" color="secondary"></ion-toggle>
+        <ion-label>Payment category</ion-label>
+        <ion-select formControlName="selectedChipId" (ionChange)="addChip()" interface="action-sheet">
+          <ion-select-option *ngFor="let masterChip of masterChipsList" [value]="masterChip.id">{{masterChip.title}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="chip-list">
+        <ion-chip *ngFor="let chip of chips">
+          <ion-label color="primary">{{ chip.title }}</ion-label>
+          <ion-icon name="close" color="danger" (click)="removeChip(chip.id)"></ion-icon>
+        </ion-chip>
       </ion-item>
 
       <ion-item>

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { IncomeModel } from '../models/income.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CommonService } from '../common.service';
 import { File } from '@ionic-native/file/ngx';
 import { DatePipe } from '@angular/common';
 import { SqliteStorageService } from '../services/sqlite-storage/sqlite-storage.service';
+import { CommonService } from '../services/common/common.service';
 
 @Component({
   selector: 'app-tab3',
@@ -47,7 +47,7 @@ export class Tab3Page {
 
   addIncome() {
     this.incomeModel = {
-      id: 0, 
+      id: 0,
       incomeSource: this.incomeFormGroup.value.incomeSource,
       howMuchMoney: this.incomeFormGroup.value.howMuchMoney,
       currencyType: this.incomeFormGroup.value.currencyType,

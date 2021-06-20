@@ -1,41 +1,49 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      iBudget ({{getRemainingSumOfMoney()}})
-      <button class="hidden-button" (click)=hidePrivateExpenses()></button>
+      <section class="title-banner">
+        <span>
+          <ion-icon name="menu"></ion-icon>
+        </span>
+        <span>
+          <section>iBudget</section>
+          <section>{{getRemainingSumOfMoney()}}</section>
+        </span>
+        <span>
+          <ion-icon name="calendar" (click)="openCalendarAsync()"></ion-icon>
+        </span>
+      </section>
+      <!--<button class="hidden-button" (click)=hidePrivateExpenses()></button>-->
+      <section class="month-selector">
+        <ion-icon name="arrow-round-back" (click)="goBack()"></ion-icon>
+        <ion-select cancelText="Nah" okText="Okay!" [(ngModel)]="monthOption" (ionChange)="fire()">
+          <ion-select-option *ngFor="let _monthOption_ of monthOptions" [value]="_monthOption_">{{_monthOption_}}</ion-select-option>
+        </ion-select>
+        <ion-icon name="arrow-round-forward" (click)="goForward()"></ion-icon>
+      </section>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <span (click)="buttonAsync()">Button</span>
-  <ion-list>
-    <app-node [nodes]="nodeModel.childrenNodes" *ngIf="nodeModel"></app-node>
-  </ion-list>
-  <ion-list>
-    <ion-item>
-      <ion-label class="income-label">In wallet</ion-label>
-      <span class="income-figure">{{getRemainingSumOfMoney()}}</span>
-    </ion-item>
-  </ion-list>
+  <!--<span (click)="buttonAsync()">Button</span>-->
+  <section class="expense-items-section">
+    <span class="title">Expense</span>
+    <span>
+      <app-node [nodes]="expenseNodeModel.childrenNodes" *ngIf="expenseNodeModel"></app-node>
+    </span>
+  </section>
+
+  <!--<section class="income-items-section">
+    <span class="title">Income</span>
+    <span>
+      <app-node [nodes]="incomeNodeModel.childrenNodes" *ngIf="incomeNodeModel"></app-node>
+    </span>
+  </section>-->
+
   <!--<ion-calendar [(ngModel)]="dateRange"
                 [options]="optionsRange"
                 [type]="type"
                 [format]="'YYYY-MM-DD'">
   </ion-calendar>-->
-  <!--<ion-list>
-    <ion-list-header>
-      <ion-label>Money overview</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let incomeModel of incomeModels">
-       <ion-label (click)="updateIncomeAtDb(incomeModel)" class="income-label">{{incomeModel.incomeSource}}</ion-label>
-      <span (click)="updateIncomeAtDb(incomeModel)" class="income-figure">{{incomeModel.howMuchMoney | number : '1.2-2'}}</span>
-      <span class="close-button" (click)="deleteIncomeTransaction(incomeModel.id)">X</span>
-    </ion-item>
-    <ion-item *ngFor="let expenseModel of expenseModels">
-      <ion-label (click)="updateExpenseAtDb(expenseModel.id)" class="expense-label">{{expenseModel.transactionDatetime.substring(0, 10) + ' | ' + expenseModel.areaOfPayment + ' | ' + expenseModel.modeOfPayment + ' | ' + expenseModel.itemOrService}}</ion-label>
-      <span (click)="updateExpenseAtDb(expenseModel.id)" class="expense-figure">{{expenseModel.howMuchMoney | number : '1.2-2'}}</span>
-      <span class="close-button" (click)="deleteExpenseTransaction(expenseModel.id)">X</span>
-    </ion-item>
-  </ion-list>-->
 </ion-content>

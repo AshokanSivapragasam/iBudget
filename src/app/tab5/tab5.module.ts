@@ -20,4 +20,6 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
   declarations: [Tab5Page],
   providers: [DatePicker, DatePipe]
 })
-export class Tab5PageModule {}
+export class Tab5PageModule {
+  
+}

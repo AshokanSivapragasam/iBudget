@@ -1,12 +1,27 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Expenses
+      <section class="title-banner">
+        <span>
+          <ion-icon name="menu"></ion-icon>
+        </span>
+        <span>
+          <section>Insights</section>
+        </span>
+        <span>
+          <ion-icon name="calendar"></ion-icon>
+        </span>
+      </section>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-label class="month-selector">
+    <ion-icon name="arrow-round-back" (click)="goBackAsync(idx)"></ion-icon>
+    <span>{{ monthOption }}</span>
+    <ion-icon name="arrow-round-forward" (click)="goForwardAsync(idx)"></ion-icon>
+  </ion-label>
   <google-chart #chart
    [title]="title"
    [type]="type"

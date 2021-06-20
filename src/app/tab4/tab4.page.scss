@@ -1,1 +1,50 @@
+ion-toolbar {
+  --background: #3553bb;
+  color: ivory;
+}
 
+.title-banner {
+  display: flex;
+  flex-direction: row;
+}
+
+.title-banner>span {
+  display: flex;
+  flex-direction: column;
+  flex: 0.33;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-banner>span:first-child {
+  align-items: flex-start;
+}
+
+.title-banner>span:last-child {
+  align-items: flex-end;
+}
+
+.list-md {
+  padding: 0 !important;
+}
+
+.month-selector {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #3553bb;
+    color: ivory;
+    padding: 10px;
+    font-size: small;
+}
+  
+.month-selector>* {
+    display: flex;
+    flex: .33;
+    justify-content: center;
+    margin: 2px;
+    padding: 10px;
+}

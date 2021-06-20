@@ -15,7 +15,7 @@ import { MessageService } from '../services/message/message.service';
 })
 export class Tab2Page {
   currentDatetime: string = '';
-  areaOfPaymentOptions: string[] = [];//['Food', 'Vegetables', 'Non-vegetables', 'Fruits', 'Shelter', 'Clothing', 'Travel', 'Entertainment', 'Medical', 'Personal', 'O-s-m:More', 'Grooming', 'ExclusiveBuy'];
+  areaOfPaymentOptions: string[] = ['Food', 'Vegetables', 'Non-vegetables', 'Fruits', 'Shelter', 'Clothing', 'Travel', 'Entertainment', 'Medical', 'Personal', 'O-s-m:More', 'Grooming', 'ExclusiveBuy'];
   exclusiveBuyOptions: string[] = ['Books', 'Ear-rings'];
   groomingOptions: string[] = ['Haircut'];
   vegetablesOptions: string[] = ['Garland', 'Big Onions', 'Small Onions', 'Carrot', 'Garlic', 'Ginger', 'Lady\'s Finger', 'Sau-sau', 'Karanai', 'Ridge Guard', 'Snake Guard', 'Bitter Guard', 'Potato', 'Sweet Potato', 'Tomato', 'Brinjal', 'Beans', 'Radish', 'Beetroot', 'Avarai', 'Curry Leaves', 'Chilly', 'Coconuts', 'Banana-flower', 'Banana-stem', 'Maize', 'Pudina', 'Keerai', 'Moringa', 'Carry Bag'];
@@ -50,6 +50,29 @@ export class Tab2Page {
   frequentExpenseTransactionId: number;
   recurrentExpenseModels: ExpenseModel[] = [];
   expenseTypeModels: ExpenseTypeModel[] = [];
+  masterChipsList: any[] = [{
+    id: 1,
+    title: 'Avoidable'
+  }, {
+    id: 2,
+    title: 'DailyBuy'
+  }, {
+    id: 3,
+    title: 'BestBuy'
+  }, {
+    id: 4,
+    title: 'MustBuy'
+  }, {
+    id: 5,
+    title: 'Occassional'
+  }, {
+    id: 6,
+    title: 'Frequent'
+  }];
+  selectedChipId: number = 0;
+  chips: any[] = [];
+  lat: any;
+  long: any;
 
   constructor(private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
@@ -58,7 +81,7 @@ export class Tab2Page {
               private messageService: MessageService,
               private cdr: ChangeDetectorRef) {
     this.expenseFormGroup = formBuilder.group({
-      isPrivate: [false, Validators.required],
+      selectedChipId: [0, Validators.required],
       areaOfPayment: ['', Validators.required],
       itemOrService: ['', Validators.required],
       modeOfPayment: [this.modeOfPaymentOptions[0], Validators.required],
@@ -99,8 +122,18 @@ export class Tab2Page {
   async getExpenseModelByIdAsync(expenseModelId: number) {
     await this.sqliteStorageService.getExpenseByIdFromDbAsync(expenseModelId)
     .then(_expenseModel_ => {
+      this.chips = [];
+      console.log(_expenseModel_);
+      if(_expenseModel_.labels) {
+        _expenseModel_.labels.split(',').forEach(_label_ => {
+          let _masterChip_ = this.masterChipsList.find(r => r.title == _label_);
+          this.chips.push({
+            id: _masterChip_.id,
+            title: _masterChip_.title
+          });
+        });
+      }
       this.expenseFormGroup.patchValue({
-        isPrivate: _expenseModel_.isPrivate,
         areaOfPayment: _expenseModel_.areaOfPayment,
         modeOfPayment: _expenseModel_.modeOfPayment,
         howMuchMoney: _expenseModel_.howMuchMoney,
@@ -108,7 +141,6 @@ export class Tab2Page {
         transactionDatetime: _expenseModel_.transactionDatetime,
         transactionNotes: _expenseModel_.transactionNotes
       });
-
       this.getItemsOrServices(_expenseModel_.itemOrService);
     });
   }
@@ -142,47 +174,6 @@ export class Tab2Page {
 
   getItemsOrServices(preSelectedItemOrServiceOption: string) {
     this.itemOrServiceOptions = this.expenseTypeModels.filter(r => r.areaOfPayment === this.expenseFormGroup.value.areaOfPayment).map(r => r.itemOrService);
-    /*switch (this.expenseFormGroup.value.areaOfPayment) {
-      case 'Food':
-        this.itemOrServiceOptions = this.foodItemExpenseOptions;
-        break;
-      case 'Vegetables':
-        this.itemOrServiceOptions = this.vegetablesOptions;
-        break;
-      case 'Non-vegetables':
-        this.itemOrServiceOptions = this.nonVegetablesOptions;
-        break;
-      case 'Fruits':
-        this.itemOrServiceOptions = this.fruitsOptions;
-        break;
-      case 'Shelter':
-        this.itemOrServiceOptions = this.shelterExpenseOptions;
-        break;
-      case 'Clothing':
-        this.itemOrServiceOptions = this.clothingExpenseOptions;
-        break;
-      case 'Travel':
-        this.itemOrServiceOptions = this.travelExpenseOptions;
-        break;
-      case 'Entertainment':
-        this.itemOrServiceOptions = this.entertainmentExpenseOptions;
-        break;
-      case 'Medical':
-        this.itemOrServiceOptions = this.medicalExpenseOptions;
-        break;
-      case 'O-s-m:More':
-        this.itemOrServiceOptions = this.oneStopMarketOptions;
-        break;
-      case 'Grooming':
-        this.itemOrServiceOptions = this.groomingOptions;
-        break;
-      case 'ExclusiveBuy':
-        this.itemOrServiceOptions = this.exclusiveBuyOptions;
-        break;
-      default:
-        this.itemOrServiceOptions = this.personalExpenseOptions;
-        break;
-    }*/
     preSelectedItemOrServiceOption = preSelectedItemOrServiceOption ? preSelectedItemOrServiceOption : this.itemOrServiceOptions[0];
 
     if (this.expenseFormGroup.value.itemOrService !== preSelectedItemOrServiceOption) {
@@ -194,9 +185,10 @@ export class Tab2Page {
   }
   
   addExpense() {
+    let _labels_ = this.chips.map(r => r.title).join(',');
     const expenseModel = {
       id: 0,
-      isPrivate: this.expenseFormGroup.value.isPrivate,
+      labels: _labels_,
       areaOfPayment: this.expenseFormGroup.value.areaOfPayment,
       itemOrService: this.expenseFormGroup.value.itemOrService,
       modeOfPayment: this.expenseFormGroup.value.modeOfPayment,
@@ -214,9 +206,11 @@ export class Tab2Page {
   }
 
   editExpense(expenseModelId: number) {
+    let _labels_ = this.chips.map(r => r.title).join(',');
+    console.log(_labels_);
     const expenseModel = {
       id: expenseModelId,
-      isPrivate: this.expenseFormGroup.value.isPrivate,
+      labels: _labels_,
       areaOfPayment: this.expenseFormGroup.value.areaOfPayment,
       itemOrService: this.expenseFormGroup.value.itemOrService,
       modeOfPayment: this.expenseFormGroup.value.modeOfPayment,
@@ -250,5 +244,16 @@ export class Tab2Page {
 
   fillFrequentExpenseModel(frequentExpenseTransactionId: number) {
     this.getExpenseModelByFrequentExpenseTransactionIdAsync(frequentExpenseTransactionId);
+  }
+
+  addChip() {
+    this.chips.push({
+      id: this.expenseFormGroup.value.selectedChipId,
+      title: this.masterChipsList.find(r => r.id == this.expenseFormGroup.value.selectedChipId).title
+    });
+  }
+
+  removeChip(chipId: number) {
+    this.chips = this.chips.filter(r => r.id != chipId);
   }
 }

@@ -7,10 +7,35 @@
 </ion-header>
 
 <ion-content>
+  <section class="circle-outer-belt"></section>
+  <section class="circle-inner-belt"></section>
+  <section class="radical-menu">
+    <section *ngFor="let menuItemIndex of menuItemIndices">
+      {{totalMenuItems[menuItemIndex]}}
+    </section>
+  </section>
+  <span>{{_second_}}</span>
+  <!--<section class="points">
+    <section *ngFor="let point of points" [style.transform]="point._transform_">{{'-'}}</section>
+  </section>-->
+
+  <canvas #canvasSection width="1366px" height="1000px" style="margin: 0px; background-color: antiquewhite;">
+  </canvas>
+
+  <section class="points">
+    <section *ngFor="let bezierPoint of bezierPoints" [style.transform]="bezierPoint._transform_" [style.color]="bezierPoint._color_">{{'.'}}</section>
+  </section>
+  <button (click)="goForward()">Frwd</button>
+  <button (click)="goBack()">Back</button>
+  <!--<ion-list>
+    <ion-item *ngFor="let message of messageService.messages">
+      <span>{{message}}</span>
+    </ion-item>
+  </ion-list>
   <ion-list>
     <ion-item *ngFor="let expenseModel of recurrentExpenseModels">
       <ion-label (click)="goToExpensePage(expenseModel.id)" class="expense-label">{{expenseModel.areaOfPayment + ' | ' + expenseModel.modeOfPayment + ' | ' + expenseModel.itemOrService}}</ion-label>
       <span (click)="goToExpensePage(expenseModel.id)" class="expense-figure">{{expenseModel.howMuchMoney | number : '1.2-2'}}</span>
     </ion-item>
-  </ion-list>
+  </ion-list>-->
 </ion-content>

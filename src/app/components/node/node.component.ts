@@ -25,10 +25,6 @@ export class NodeComponent implements OnInit {
     this.router.navigate(['/tabs/tab2', expenseModelId]);
   }
 
-  consoleLog() {
-    console.log('consoleLog');
-  }
-  
   deleteExpenseTransaction(index: number) {
     this.sqliteStorageService.deleteExpenseFromDbAsync(index)
     .then(_deleteMessageText_ => {

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Algorithms
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <span>..Merge Sort..</span>
+  <section class="sort-container">
+    <span class="sort-bar" [style.backgroundColor]="sortModel.color" [style.height.px]="sortModel.integer * 1.25" *ngFor="let sortModel of listOfIntegers04"></span>
+  </section>
+
+  <span>..Bubble Sort..</span>
+  <section class="sort-container">
+    <span class="sort-bar" [style.backgroundColor]="sortModel.color" [style.height.px]="sortModel.integer * 1.25" *ngFor="let sortModel of listOfIntegers01"></span>
+  </section>
+
+  <span>..Insertion Sort..</span>
+  <section class="sort-container">
+    <span class="sort-bar" [style.backgroundColor]="sortModel.color" [style.height.px]="sortModel.integer * 1.25" *ngFor="let sortModel of listOfIntegers03"></span>
+  </section>
+
+  <span>..Selection Sort..</span>
+  <section class="sort-container">
+    <span class="sort-bar" [style.backgroundColor]="sortModel.color" [style.height.px]="sortModel.integer * 1.25" *ngFor="let sortModel of listOfIntegers02"></span>
+  </section>
+</ion-content>

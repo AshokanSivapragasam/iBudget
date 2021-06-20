@@ -1,0 +1,28 @@
+.msg-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.msg {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: small;
+}
+
+.msg:nth-child(even) {
+    background-color: green;
+    color: lime;
+}
+
+.msg:nth-child(odd) {
+    background-color: lightskyblue;
+    color: green;
+}
