@@ -32,9 +32,9 @@ export class SqliteStorageService {
       location: 'default'
     }).then(async (db: SQLiteObject) => {
       this.sqlitePorter.exportDbToJson(db)
-      .then(_response_ => { console.log("sqlitePorter.exportDbToJson | Success | " + _response_); createTableMessageText = _response_; })
-      .catch(reason => console.log("sqlitePorter.exportDbToJson | Catch01 | " + reason));
-    }).catch(e => { console.log('SvcException 3: ' + JSON.stringify(e)); createTableMessageText = 'SvcException 3: ' + JSON.stringify(e); });
+      .then(_response_ => { this.messageService.add("sqlitePorter.exportDbToJson | Success | " + _response_); console.log("sqlitePorter.exportDbToJson | Success | " + JSON.stringify(_response_)); createTableMessageText = _response_; })
+      .catch(reason => { this.messageService.add("sqlitePorter.exportDbToJson | Catch01 | " + reason); console.log("sqlitePorter.exportDbToJson | Catch01 | " + JSON.stringify(reason)); });
+    }).catch(e => { this.messageService.add('SvcException 3: ' + JSON.stringify(e, )); console.log('SvcException 3: ' + JSON.stringify(e)); createTableMessageText = 'SvcException 3: ' + JSON.stringify(e); });
 
     return createTableMessageText;
   }
@@ -130,7 +130,7 @@ export class SqliteStorageService {
             });
           }
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return expenseTypeModels;
   }
@@ -183,7 +183,7 @@ export class SqliteStorageService {
             });
           }
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return expenseModels;
   }
@@ -208,7 +208,7 @@ export class SqliteStorageService {
           distinctDates.push(_monthText_);
         }
       });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
     return distinctDates;
   }
 
@@ -249,7 +249,7 @@ export class SqliteStorageService {
             });
           }
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
     return freePieChartData;
   }
 
@@ -309,7 +309,7 @@ export class SqliteStorageService {
               }
             }).catch(e => { console.log('SvcException 3: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return expenseModels;
   }
@@ -339,7 +339,7 @@ export class SqliteStorageService {
             transactionNotes: ''
           };
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return expenseModel;
   }
@@ -369,7 +369,7 @@ export class SqliteStorageService {
             transactionNotes: currentRow.transactionNotes
           };
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return expenseModel;
   }
@@ -486,7 +486,7 @@ export class SqliteStorageService {
             });
           }
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return incomeModels;
   }
@@ -514,7 +514,7 @@ export class SqliteStorageService {
             transactionNotes: currentRow.transactionNotes
           };
         }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); messageText = JSON.stringify(e); });
-    }).catch(e => { console.log('SvcException 2: ' + e); messageText = e; });
+    }).catch(e => { console.log('SvcException 2: ' + e); messageText = JSON.stringify(e); });
 
     return incomeModel;
   }
@@ -577,5 +577,27 @@ export class SqliteStorageService {
     }).catch(e => { console.log('SvcException 3: ' + JSON.stringify(e)); deleteMessageText = 'SvcException 3: ' + JSON.stringify(e); });
 
     return deleteMessageText;
+  }
+
+  async executeSqlStmt(queryText: string): Promise<any> {
+    var errorMessageText: string = '';
+    var queryResponse: any = null;
+
+    await this.sqlite.create({
+      name: 'ionicdb.db',
+      location: 'default'
+    }).then(async (db: SQLiteObject) => {
+      await db.executeSql(queryText, [])
+        .then(selectStmtResponse => {
+          var rows = [];
+          for (var idx = 0; idx < selectStmtResponse.rows.length; idx += 1) {
+            var currentRow = selectStmtResponse.rows.item(idx);
+            rows.push(currentRow);
+          }
+          queryResponse = rows;
+        }).catch(e => { console.log('SvcException 1: ' + JSON.stringify(e)); errorMessageText = JSON.stringify(e); });
+    }).catch(e => { console.log('SvcException 2: ' + e); errorMessageText = JSON.stringify(e); });
+
+    return queryResponse;
   }
 }

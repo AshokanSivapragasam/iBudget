@@ -51,6 +51,33 @@ import { CommonService } from './services/common/common.service';
 })
 export class AppModule {
   constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg')); // Or whatever path you placed mdi.svg at
+    matIconRegistry
+    .addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'))
+    .addSvgIcon("iBudget001", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget001.svg'))
+    .addSvgIcon("iBudget002", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget002.svg'))
+    .addSvgIcon("iBudget003", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget003.svg'))
+    .addSvgIcon("iBudget004", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget004.svg'))
+    .addSvgIcon("iBudget005", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget005.svg'))
+    .addSvgIcon("iBudget006", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget006.svg'))
+    .addSvgIcon("iBudget007", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget007.svg'))
+    .addSvgIcon("iBudget008", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget008.svg'))
+    .addSvgIcon("iBudget009", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget009.svg'))
+    .addSvgIcon("iBudget010", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget010.svg'))
+    .addSvgIcon("iBudget011", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget011.svg'))
+    .addSvgIcon("iBudget012", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget012.svg'))
+    .addSvgIcon("iBudget013", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget013.svg'))
+    .addSvgIcon("iBudget014", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget014.svg'))
+    .addSvgIcon("iBudget015", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget015.svg'))
+    .addSvgIcon("iBudget016", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget016.svg'))
+    .addSvgIcon("iBudget017", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget017.svg'))
+    .addSvgIcon("iBudget018", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget018.svg'))
+    .addSvgIcon("iBudget019", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget019.svg'))
+    .addSvgIcon("iBudget020", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget020.svg'))
+    .addSvgIcon("iBudget021", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget021.svg'))
+    .addSvgIcon("iBudget022", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget022.svg'))
+    .addSvgIcon("iBudget023", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget023.svg'))
+    .addSvgIcon("iBudget024", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget024.svg'))
+    .addSvgIcon("iBudget025", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget025.svg'))
+    .addSvgIcon("iBudget026", domSanitizer.bypassSecurityTrustResourceUrl('./assets/001/iBudget026.svg'));
   }
 }

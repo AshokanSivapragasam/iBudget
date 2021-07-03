@@ -6,7 +6,6 @@ import { IncomeModel } from '../models/income.model';
 import { NavController, ModalController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { NodeModel } from '../models/node.model';
-import { CalendarComponentOptions, CalendarModalOptions, CalendarResult, CalendarModal, DayConfig } from 'ion2-calendar';
 import { File } from '@ionic-native/file/ngx';
 import { SdCardFileService } from '../services/sd-card-file/sd-card-file.service';
 import { MessageService } from '../services/message/message.service';
@@ -17,7 +16,9 @@ import { DatePipe } from '@angular/common';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {  
+export class Tab1Page {
+  svgFile = '/assets/001/iBudget001.svg';
+  svgFiles: string[] = [];
   totalSumOfMoneyAsIncome: number = 0;
   totalSumOfMoneyAsExpense: number = 0;
   incomeModels: IncomeModel[] = [];
@@ -75,6 +76,33 @@ export class Tab1Page {
   }
 
   async ionViewWillEnter() {
+    this.svgFiles = ['/assets/001/iBudget001.svg',
+    '/assets/001/iBudget002.svg',
+    '/assets/001/iBudget003.svg',
+    '/assets/001/iBudget004.svg',
+    '/assets/001/iBudget005.svg',
+    '/assets/001/iBudget006.svg',
+    '/assets/001/iBudget007.svg',
+    '/assets/001/iBudget008.svg',
+    '/assets/001/iBudget009.svg',
+    '/assets/001/iBudget010.svg',
+    '/assets/001/iBudget011.svg',
+    '/assets/001/iBudget012.svg',
+    '/assets/001/iBudget013.svg',
+    '/assets/001/iBudget014.svg',
+    '/assets/001/iBudget015.svg',
+    '/assets/001/iBudget016.svg',
+    '/assets/001/iBudget017.svg',
+    '/assets/001/iBudget018.svg',
+    '/assets/001/iBudget019.svg',
+    '/assets/001/iBudget020.svg',
+    '/assets/001/iBudget021.svg',
+    '/assets/001/iBudget022.svg',
+    '/assets/001/iBudget023.svg',
+    '/assets/001/iBudget024.svg',
+    '/assets/001/iBudget025.svg',
+    '/assets/001/iBudget026.svg'];
+
     this.expenseNodeModel = {
       title:  'Root',
       level: -1,
@@ -86,10 +114,10 @@ export class Tab1Page {
       collapse: true
     };
     await this.bootstrapSqliteDbAsync();
-    this.getAllExpensesFromDb();
+    await this.getAllExpensesFromDb();
     await this.delay(50);
     this.initIncomeNodeModel();
-    this.getAllIncomesFromDb();
+    //this.getAllIncomesFromDb();
   }
 
   initExpenseModel() {
@@ -195,7 +223,7 @@ export class Tab1Page {
 
   buildTrieImplementation(nodeModelSourceData: any[], keyProperties: string[], originalNodeModel: NodeModel, nodeModel: NodeModel, rowIndex: number, columnIndex: number) {
     // Return when there is no transactions..
-    if(nodeModelSourceData.length == 0) return;
+    if(nodeModelSourceData.length == 0 || this.expenseModels.length == 0) return;
     else if (rowIndex == nodeModelSourceData.length) {
       nodeModel.sumOfMoney += nodeModelSourceData[rowIndex - 1]["howMuchMoney"];
       nodeModel.expenseModelId = nodeModelSourceData[rowIndex - 1]["id"];
@@ -262,8 +290,8 @@ export class Tab1Page {
     });
   }
 
-  getAllExpensesFromDb() {
-    this.sqliteStorageService.getAllExpensesFromDbAsync('')
+  async getAllExpensesFromDb() {
+    await this.sqliteStorageService.getAllExpensesFromDbAsync('')
     .then(_expenseModels_ => {
       this.expenseModels = _expenseModels_;
       //this.buildTrie(this.expenseModels, this.expenseKeyProperties, this.expenseNodeModel);
@@ -340,6 +368,7 @@ export class Tab1Page {
 
   displayScopedResults() {
     let _filteredExpenseModels_ = this.expenseModels.filter(r => this.datePipe.transform(r.transactionDatetime, this._datePipeFormat_) == this.monthOption);
+    this.messageService.add('MonthOption: ' + this.monthOption + ' | Total: ' + this.expenseModels.length + ' | Filtered: ' + _filteredExpenseModels_.length + '');
     this.initExpenseModel();
     this.buildTrie(_filteredExpenseModels_, this.expenseKeyProperties, this.expenseNodeModel);
   }

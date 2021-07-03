@@ -2,15 +2,19 @@
   <ion-toolbar>
     <ion-title>
       <section class="title-banner">
-        <span>
-          <ion-icon name="menu"></ion-icon>
+        <span class="neumorphic-icon-container">
+          <span class="neumorphic-icon">
+            <ion-icon name="menu"></ion-icon>
+          </span>
         </span>
-        <span>
-          <section>iBudget</section>
+        <span class="other-container">
+          <ion-icon src="/assets/001/iBudget019.svg" style="font-size: 120px;"></ion-icon>
           <section>{{getRemainingSumOfMoney()}}</section>
         </span>
-        <span>
-          <ion-icon name="calendar" (click)="openCalendarAsync()"></ion-icon>
+        <span class="neumorphic-icon-container">
+          <span class="neumorphic-icon">
+            <ion-icon name="calendar" (click)="openCalendarAsync()"></ion-icon>
+          </span>
         </span>
       </section>
       <!--<button class="hidden-button" (click)=hidePrivateExpenses()></button>-->

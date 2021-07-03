@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Action Blocks
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="action-blocks-container">
+    <section (click)="chooseFilePath()">Choose</section>
+    <section class="action-block">
+      <ion-button class="faq" color="tertiary" *ngFor="let faq of faqs" (click)="replaceQueryText(faq.queryText, faq.name)">{{faq.name}}</ion-button>
+    </section>
+    <section class="action-block">
+      <ion-button expand="full" color="secondary" (click)="executeSqlStmt(queryText)">Run it!</ion-button>
+      <ion-input [(ngModel)]="suggestedFilename"></ion-input>
+      <ion-button expand="full" color="secondary" (click)="writeToFile(queryResponseJson)">Write it!</ion-button>
+    </section>
+    <section class="action-block">
+      <ion-item>
+        <ion-label position="floating">Query Text</ion-label>
+        <ion-textarea rows="10" cols="100" [(ngModel)]="queryText"></ion-textarea>
+      </ion-item>
+    </section>
+    <section class="action-block">
+      {{queryResponseJson}}
+    </section>
+  </section>
+</ion-content>
